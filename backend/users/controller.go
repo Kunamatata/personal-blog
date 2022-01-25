@@ -41,6 +41,12 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 	createdUser, err := c.userRepository.Create(&user)
 	if err != nil {
 		log.Println("Could not create user")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(types.APIResponse{
+			Status: "error",
+			Data:   nil,
+		})
+		return
 	}
 
 	json.NewEncoder(w).Encode(types.APIResponse{
