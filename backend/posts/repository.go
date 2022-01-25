@@ -50,7 +50,6 @@ func (p *PostRepo) Delete(slug string) error {
 	deletedAt := time.Now()
 
 	_, err := p.db.Exec("UPDATE post SET deleted_at = $1 WHERE slug = $2", &deletedAt, slug)
-
 	if err != nil {
 		log.Println("Failed to delete post: ", slug)
 		return err

@@ -7,14 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/kunamatata/blog/types"
 )
-
-//APIResponse is the response format for API responses
-type APIResponse struct {
-	Status  string      `json:"status"`
-	Message *string     `json:"message,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
-}
 
 //PostController represents the interface for the post controller
 type PostController interface {
@@ -51,7 +45,7 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 		log.Println("Could not create post")
 	}
 
-	json.NewEncoder(w).Encode(APIResponse{
+	json.NewEncoder(w).Encode(types.APIResponse{
 		Status: "success",
 		Data:   createdPost,
 	})
@@ -61,7 +55,7 @@ func (c *Controller) Create(w http.ResponseWriter, r *http.Request) {
 func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	slug := vars["postID"]
-	apiResponse := APIResponse{}
+	apiResponse := types.APIResponse{}
 
 	post, err := c.postRepository.Get(slug)
 
@@ -72,14 +66,14 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if post != nil {
-		apiResponse = APIResponse{
+		apiResponse = types.APIResponse{
 			Status: "success",
 			Data:   post,
 		}
 		w.WriteHeader(http.StatusOK)
 	} else {
 		var message = "Post not found"
-		apiResponse = APIResponse{
+		apiResponse = types.APIResponse{
 			Status:  "error",
 			Message: &message,
 		}
@@ -97,14 +91,14 @@ func (c *Controller) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Could not delete post")
 		json.NewEncoder(w).Encode(
-			APIResponse{
+			types.APIResponse{
 				Status: "error",
 			},
 		)
 	}
 
 	json.NewEncoder(w).Encode(
-		APIResponse{
+		types.APIResponse{
 			Status: "success",
 		},
 	)
@@ -115,13 +109,13 @@ func (c *Controller) GetAll(w http.ResponseWriter, r *http.Request) {
 	posts, err := c.postRepository.GetAll()
 	if err != nil {
 		message := "Could not retrieve posts"
-		json.NewEncoder(w).Encode(APIResponse{
+		json.NewEncoder(w).Encode(types.APIResponse{
 			Status:  "error",
 			Message: &message,
 		})
 	}
 
-	json.NewEncoder(w).Encode(APIResponse{
+	json.NewEncoder(w).Encode(types.APIResponse{
 		Status: "success",
 		Data:   posts,
 	})
@@ -145,7 +139,7 @@ func (c *Controller) Update(w http.ResponseWriter, r *http.Request) {
 		log.Println("Could not update post")
 	}
 
-	json.NewEncoder(w).Encode(APIResponse{
+	json.NewEncoder(w).Encode(types.APIResponse{
 		Status: "success",
 		Data:   updatedPost,
 	})
