@@ -8,7 +8,7 @@ export const PostPage = () => {
   const { isLoading, data } = useQuery<ApiResponse<Post>>(
     `post-${slug}`,
     async () => {
-      const response = await fetch(`http://localhost:8080/posts/${slug}`);
+      const response = await fetch(`/api/posts/${slug}`);
       return response.json();
     },
     { refetchOnWindowFocus: false }

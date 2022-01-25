@@ -8,17 +8,16 @@ export interface ApiResponse<T> {
 }
 
 export const Posts = (props: any) => {
-  const { slug } = useParams();
   const { isLoading, data } = useQuery<ApiResponse<Post[]>>(
     "posts",
     async () => {
-      const response = await fetch("http://localhost:8080/posts");
+      const response = await fetch("/api/posts");
       return response.json();
     },
     { refetchOnWindowFocus: false }
   );
 
-  if (isLoading) {
+  if (isLoading || data?.data === null) {
     return <></>;
   }
 
