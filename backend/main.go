@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/kunamatata/blog/database"
 	"github.com/kunamatata/blog/posts"
 	"github.com/kunamatata/blog/users"
@@ -17,7 +18,10 @@ func corsHandler(next http.Handler) http.Handler {
 	})
 }
 
+var CookieStore = sessions.NewCookieStore([]byte("some-session-key"))
+
 func main() {
+
 	db := database.NewConnection()
 
 	postRepo := posts.NewPostRepo(db)
@@ -37,6 +41,7 @@ func main() {
 	router.HandleFunc("/users/{userID}", userController.Get).Methods("GET", "OPTIONS")
 	router.HandleFunc("/users", userController.Create).Methods("POST", "OPTIONS")
 	router.HandleFunc("/login", userController.Login).Methods("POST", "OPTIONS")
+	router.HandleFunc("/logout", userController.Logout).Methods("POST", "OPTIONS")
 
 	router.Use(mux.CORSMethodMiddleware(router))
 

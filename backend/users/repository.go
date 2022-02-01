@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -33,6 +34,7 @@ func (u *UserRepo) Create(user *User) (*User, error) {
 	}
 
 	user.Password = string(encryptedPassword)
+	user.Slug = uuid.New().String()
 	row := u.db.QueryRow(`INSERT INTO "user" (slug, name, email, password, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *`, user.Slug, user.Name, user.Email, user.Password, user.CreatedAt)
 
 	err = row.Scan(&createdUser.ID, &createdUser.Slug, &createdUser.Name, &createdUser.Email, &createdUser.Password, &createdUser.CreatedAt, &createdUser.DeletedAt, &createdUser.UpdatedAt)
