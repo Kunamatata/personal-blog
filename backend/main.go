@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 	"github.com/kunamatata/blog/database"
 	"github.com/kunamatata/blog/posts"
 	"github.com/kunamatata/blog/users"
@@ -17,8 +16,6 @@ func corsHandler(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-
-var CookieStore = sessions.NewCookieStore([]byte("some-session-key"))
 
 func main() {
 
