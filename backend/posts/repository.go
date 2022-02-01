@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx"
+	"github.com/kunamatata/blog/utils"
 )
 
 //PostRepo is the struct representing the post repository
@@ -60,6 +61,7 @@ func (p *PostRepo) Delete(slug string) error {
 
 //Get returns a post
 func (p *PostRepo) Get(slug string) (*Post, error) {
+	defer utils.Duration(utils.Track("Get"))
 	var post Post
 	row := p.db.QueryRow("SELECT * FROM post WHERE slug = $1", slug)
 
@@ -78,6 +80,7 @@ func (p *PostRepo) Get(slug string) (*Post, error) {
 
 //GetAll returns all posts
 func (p *PostRepo) GetAll() ([]Post, error) {
+	defer utils.Duration(utils.Track("GetAll"))
 	var posts []Post
 
 	rows, err := p.db.Query("SELECT * FROM post where deleted_at is null")
